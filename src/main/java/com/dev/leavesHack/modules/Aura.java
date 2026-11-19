@@ -253,7 +253,7 @@ public class Aura extends Module {
                         }
                         mc.interactionManager.attackEntity(mc.player, target);
                         //mc.getNetworkHandler().sendPacket(PlayerInteractEntityC2SPacket.attack(target, mc.player.isSneaking()));
-                        mc.player.resetTicksSinceLastAttack();
+                        mc.player.resetLastAttackedTicks();
                         EntityUtil.attackSwingHand();
                         if (rotate.get()) {
                             Rotation.snapBack();
@@ -274,7 +274,7 @@ public class Aura extends Module {
             }
             mc.interactionManager.attackEntity(mc.player, target);
 //            mc.getNetworkHandler().sendPacket(PlayerInteractEntityC2SPacket.attack(target, mc.player.isSneaking()));
-            mc.player.resetTicksSinceLastAttack();
+            mc.player.resetLastAttackedTicks();
             EntityUtil.attackSwingHand();
             tick.reset();
             if (rotate.get()) {

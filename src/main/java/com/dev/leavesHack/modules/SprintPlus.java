@@ -14,6 +14,7 @@ import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.orbit.EventPriority;
+import net.minecraft.entity.effect.StatusEffects;
 
 public class SprintPlus extends Module {
     public static SprintPlus INSTANCE;
@@ -68,9 +69,9 @@ public class SprintPlus extends Module {
             if (mode.get() == Mode.Rage && !permaSprint.get()) return false;
         }
 
-        boolean strictSprint = !(mc.player.isPartlyTouchingWater())
-            && !mc.player.hasBlindnessEffect()
-            && mc.player.hasVehicle() ? (mc.player.getVehicle().canSprintAsVehicle() && mc.player.getVehicle().isLogicalSideForUpdatingMovement()) : mc.player.getHungerManager().canSprint()
+        boolean strictSprint = !(mc.player.isTouchingWater())
+            && !mc.player.hasStatusEffect(StatusEffects.BLINDNESS)
+            && mc.player.hasVehicle() ? (mc.player.getVehicle().canSprintAsVehicle() && mc.player.getVehicle().isLogicalSideForUpdatingMovement()) : mc.player.getHungerManager().getFoodLevel() > 6
             && (!mc.player.horizontalCollision || mc.player.collidedSoftly);
 
         return isActive() && (mode.get() == Mode.Rage || strictSprint);

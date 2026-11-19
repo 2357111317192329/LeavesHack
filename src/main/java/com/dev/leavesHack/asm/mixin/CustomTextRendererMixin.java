@@ -7,8 +7,10 @@ import meteordevelopment.meteorclient.renderer.MeteorRenderPipelines;
 import meteordevelopment.meteorclient.renderer.text.CustomTextRenderer;
 import meteordevelopment.meteorclient.renderer.text.FontFace;
 import meteordevelopment.meteorclient.renderer.text.TextRenderer;
+import meteordevelopment.meteorclient.utils.Utils;
 import meteordevelopment.meteorclient.utils.render.color.Color;
 import net.minecraft.client.MinecraftClient;
+import org.lwjgl.BufferUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -46,7 +48,8 @@ public abstract class CustomTextRendererMixin implements TextRenderer {
     @Inject(method = "<init>",at = @At("RETURN"))
     public void onInit(FontFace fontFace, CallbackInfo ci) throws IOException {
 
-        ByteBuffer buffer = fontFace.readToDirectByteBuffer();
+        byte[] bytes = Utils.readBytes(fontFace.toStream());
+        ByteBuffer buffer = BufferUtils.createByteBuffer(bytes.length).put(bytes).flip();
 
         fonts_fix = new FontFix[5];
         for (int i = 0; i < fonts_fix.length; i++) {
@@ -150,7 +153,7 @@ public abstract class CustomTextRendererMixin implements TextRenderer {
                 .attachments(MinecraftClient.getInstance().getFramebuffer())
                 .pipeline(MeteorRenderPipelines.UI_TEXT)
                 .mesh(mesh)
-                .sampler("u_Texture", font_fix.texture.getGlTextureView(), font_fix.texture.getSampler())
+                .sampler("u_Texture", font_fix.texture.getGlTextureView())
                 .end();
         }
 

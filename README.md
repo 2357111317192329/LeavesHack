@@ -26,13 +26,13 @@
 
 ## 简体中文
 
-LeavesHack 是面向 Meteor Client 的 Minecraft 1.21.11 客户端插件
+LeavesHack 是面向 Meteor Client 的 Minecraft 1.21.8 客户端插件
 
 ### 环境要求
 
-- Minecraft `1.21.11`
+- Minecraft `1.21.8`
 - Java `21` 或更高版本
-- 从V2版本开始都是1.21.11，V1版本都是1.21.1
+- 从V2版本开始都是1.21.11，V1版本都是1.21.1；当前源码已降级适配 1.21.8
 - [Meteor Client](https://meteorclient.com)
 - 可选：[Litematica](https://modrinth.com/mod/litematica) 与 [MaLiLib](https://modrinth.com/mod/malilib)（Printer 使用）
 
@@ -111,11 +111,11 @@ LeavesHack 是面向 Meteor Client 的 Minecraft 1.21.11 客户端插件
 
 ## English
 
-LeavesHack is a Minecraft 1.21.11 client-side addon for Meteor Client.
+LeavesHack is a Minecraft 1.21.8 client-side addon for Meteor Client.
 
 ### Requirements
 
-- Minecraft `1.21.11`
+- Minecraft `1.21.8`
 - Java `21` or newer
 - [Meteor Client](https://meteorclient.com)
 - Optional: [Litematica](https://modrinth.com/mod/litematica) and [MaLiLib](https://modrinth.com/mod/malilib) for `Printer`

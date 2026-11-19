@@ -350,7 +350,7 @@ public class SelfTrap extends LeavesModule {
     private boolean attackCrystals(BlockPos pos) {
         for (Entity entity : BlockUtil.getEndCrystals(new Box(pos))) {
             if (!entity.isAlive() || !(entity instanceof EndCrystalEntity crystal)) continue;
-            float self = DamageUtils.crystalDamage(mc.player, entity.getEntityPos(), false, crystal.getBlockPos().down());
+            float self = DamageUtils.crystalDamage(mc.player, entity.getPos(), false, crystal.getBlockPos().down());
             if (antiSuicide.get() && self >= EntityUtils.getTotalHealth(mc.player)) return false;
             CombatUtil.attackCrystal(entity, rotate.get(), false);
         }
@@ -358,7 +358,7 @@ public class SelfTrap extends LeavesModule {
     }
 
     private BlockPos getPlayerPos() {
-        return new BlockPosX(mc.player.getEntityPos(), true);
+        return new BlockPosX(mc.player.getPos(), true);
     }
 
     public boolean selfIntersectPos(BlockPos pos) {
@@ -393,9 +393,9 @@ public class SelfTrap extends LeavesModule {
         } else {
             if (shouldCenter) {
                 Vec3d centerPos = blockPos.toCenterPos();
-                float yaw = getRotationTo(mc.player.getEntityPos(), centerPos);
+                float yaw = getRotationTo(mc.player.getPos(), centerPos);
                 float yawRad = (float) Math.toRadians(yaw);
-                double dist = mc.player.getEntityPos().distanceTo(new Vec3d(centerPos.x, mc.player.getY(), centerPos.z));
+                double dist = mc.player.getPos().distanceTo(new Vec3d(centerPos.x, mc.player.getY(), centerPos.z));
                 double speed = Math.min(0.2873, dist);
                 double x = -Math.sin(yawRad) * speed;
                 double z = Math.cos(yawRad) * speed;

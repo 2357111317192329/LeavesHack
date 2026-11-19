@@ -411,7 +411,7 @@ public class AutoAnchor extends LeavesModule {
     private void updateTargets() {
         targets.clear();
         List<PlayerEntity> enemies = CombatUtil.getEnemies(targetRange.get());
-        enemies.sort(Comparator.comparingDouble(p -> mc.player.squaredDistanceTo(p.getEntityPos())));
+        enemies.sort(Comparator.comparingDouble(p -> mc.player.squaredDistanceTo(p.getPos())));
         int count = Math.min(enemies.size(), maxTargets.get());
         for (int i = 0; i < count; i++) targets.add(enemies.get(i));
         target = targets.isEmpty() ? null : targets.get(0);
@@ -425,7 +425,7 @@ public class AutoAnchor extends LeavesModule {
     private boolean inRangeToTargets(BlockPos pos) {
         Vec3d center = pos.toCenterPos();
         for (PlayerEntity p : targets) {
-            if (p.getEntityPos().add(0, 1, 0).distanceTo(center) < targetRadius.get()) return true;
+            if (p.getPos().add(0, 1, 0).distanceTo(center) < targetRadius.get()) return true;
         }
         return false;
     }

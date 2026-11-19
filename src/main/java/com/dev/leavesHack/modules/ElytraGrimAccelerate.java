@@ -97,7 +97,7 @@ public class ElytraGrimAccelerate extends Module {
         // Pre-tick modify: 设置加速标志
         if (horizontalSpeed < minAccelerateVelocity.get() && !working) {
             working = true;
-            lastWorkingTick = mc.player.getEntityWorld().getTime();
+            lastWorkingTick = mc.player.getWorld().getTime();
         }
 
         // 速度过高时停止加速
@@ -145,7 +145,7 @@ public class ElytraGrimAccelerate extends Module {
     private void modifyPacket(PlayerMoveC2SPacket packet) {
         if (mc.player == null) return;
 
-        Vec3d pos = mc.player.getEntityPos();
+        Vec3d pos = mc.player.getPos();
         float yaw = mc.player.getYaw();
         float pitch = mc.player.getPitch();
         boolean onGround = mc.player.isOnGround();
@@ -186,8 +186,8 @@ public class ElytraGrimAccelerate extends Module {
             if (!mc.player.isGliding()) return;
 
             // 获取服务器发送的速度
-            double velX = packet.getVelocity().x / 8000.0;
-            double velZ = packet.getVelocity().z / 8000.0;
+            double velX = packet.getVelocityX() / 8000.0;
+            double velZ = packet.getVelocityZ() / 8000.0;
             double horizontalLengthSquared = velX * velX + velZ * velZ;
             info("服务器速度: " + horizontalLengthSquared);
 

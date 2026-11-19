@@ -234,7 +234,7 @@ public class AutoWeb extends Module {
                 target.getZ() + dz * ticks
             );
         } else {
-            targetPos = target.getEntityPos();
+            targetPos = target.getPos();
         }
 
         return switch (placeMode.get()) {

@@ -8,7 +8,6 @@ import com.dev.leavesHack.events.ElytraUpdateEvent;
 import com.dev.leavesHack.events.KeyboardInputEvent;
 import com.dev.leavesHack.events.TravelEvent;
 import com.dev.leavesHack.manager.LeavesModule;
-import com.dev.leavesHack.utils.entity.EntityUtil;
 import com.dev.leavesHack.utils.entity.InventoryUtil;
 import com.dev.leavesHack.utils.math.Timer;
 import com.dev.leavesHack.utils.rotation.Rotation;
@@ -30,12 +29,9 @@ import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.*;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PlayerInput;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
 import java.util.TimerTask;
 
@@ -49,13 +45,6 @@ public class FireworkElytraFly extends LeavesModule {
         .name("Mode")
         .description("运行模式")
         .defaultValue(Mode.GrimDurability)
-        .build()
-    );
-    private final Setting<Double> spearDelay = sgGeneral.add(new DoubleSetting.Builder()
-        .name("SpearDelay")
-        .description("长矛突进延迟")
-        .defaultValue(800)
-        .sliderMax(1000)
         .build()
     );
     public final Setting<FireWorkMode> fireWorkMode = sgGeneral.add(new EnumSetting.Builder<FireWorkMode>()
@@ -187,13 +176,10 @@ public class FireworkElytraFly extends LeavesModule {
     private final Timer fireworkPendingTimer = new Timer();
     private boolean fireworkPending = false;
     private final Timer swapTimer = new Timer();
-    private final Timer spearTimer = new Timer();
     public boolean isFallFlying = false;
     public int packetDelayInt = 0;
-    public int spearDelayInt = 0;
     public boolean shouldJump = false, shouldRestore = false;
     public PlayerInput bypassInput = null;
-    public boolean hasSpear = false;
     private boolean savedNoGravity = false;
     private boolean isNoGravityActive = false;
     @Override
@@ -202,13 +188,10 @@ public class FireworkElytraFly extends LeavesModule {
             mc.getNetworkHandler().sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.STOP_SPRINTING));
             mc.player.setSprinting(false);
         }
-        hasSpear = false;
-        spearTimer.setMs(99999);
         fireworkTimer.setMs(99999);
         fireworkPendingTimer.setMs(99999);
         fireworkPending = false;
         packetDelayInt = 0;
-        spearDelayInt = 0;
         shouldJump = false;
         swapTimer.setMs(99999);
     }
@@ -405,28 +388,6 @@ public class FireworkElytraFly extends LeavesModule {
                 }
             }
         }
-        if (mode.get() == Mode.AutoSpear) {
-            ItemStack stack = mc.player.getInventory().getStack(mc.player.getInventory().getSelectedSlot());
-            if (stack.isIn(ItemTags.SPEARS) && spearTimer.passedMs(spearDelay.get()) && wantToMove()) {
-                mc.getNetworkHandler().sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.STAB, BlockPos.ORIGIN, Direction.DOWN));
-                EntityUtil.attackSwingHand();
-                spearTimer.reset();
-            }
-            if (elytra != -1 && packetDelayInt > packetDealy.get()) {
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, elytra, 0, SlotActionType.PICKUP, mc.player);
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, elytra, 0, SlotActionType.PICKUP, mc.player);
-                if (!mc.player.isOnGround()) {
-                    shouldJump = true;
-                    sendPacket(new ClientCommandC2SPacket(mc.player, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
-                    mc.player.startGliding();
-                }
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, elytra, 0, SlotActionType.PICKUP, mc.player);
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, 6, 0, SlotActionType.PICKUP, mc.player);
-                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, elytra, 0, SlotActionType.PICKUP, mc.player);
-                packetDelayInt = 0;
-            }
-        }
     }
     public void syncInput() {
         if (shouldRestore) return;
@@ -435,15 +396,6 @@ public class FireworkElytraFly extends LeavesModule {
         mc.getNetworkHandler().sendPacket(new PlayerInputC2SPacket(new PlayerInput(false, false, false, false, false, false, false)));
         mc.player.lastPlayerInput = new PlayerInput(false, false, false, false, false, false, false);
         shouldRestore = true;
-    }
-    private int findSpear() {
-        for (int i = 0; i < 9; i++) {
-            ItemStack stack = mc.player.getInventory().getStack(i);
-            if (stack.isIn(ItemTags.SPEARS)) {
-                return i;
-            }
-        }
-        return -1;
     }
     private int findChestplate() {
         int bestSlot = -1;
@@ -550,8 +502,7 @@ public class FireworkElytraFly extends LeavesModule {
     }
     public enum Mode {
         Legit,
-        GrimDurability,
-        AutoSpear
+        GrimDurability
     }
     public enum FireWorkMode {
         Auto,

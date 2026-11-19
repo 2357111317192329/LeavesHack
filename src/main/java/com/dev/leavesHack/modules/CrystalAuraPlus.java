@@ -579,7 +579,7 @@ public class CrystalAuraPlus extends Module {
         }
 
         // Set player eye pos
-        ((IVec3d) playerEyePos).meteor$set(mc.player.getEntityPos().x, mc.player.getEntityPos().y + mc.player.getEyeHeight(mc.player.getPose()), mc.player.getEntityPos().z);
+        ((IVec3d) playerEyePos).meteor$set(mc.player.getPos().x, mc.player.getPos().y + mc.player.getEyeHeight(mc.player.getPose()), mc.player.getPos().z);
 
         // Find targets, break and place
         findTargets();
@@ -655,15 +655,15 @@ public class CrystalAuraPlus extends Module {
         if (checkCrystalAge && entity.age < ticksExisted.get()) return 0;
 
         // Check range
-        if (isOutOfRange(entity.getEntityPos(), entity.getBlockPos(), false)) return 0;
+        if (isOutOfRange(entity.getPos(), entity.getBlockPos(), false)) return 0;
 
         // Check damage to self and anti suicide
         blockPos.set(entity.getBlockPos()).move(0, -1, 0);
-        float selfDamage = DamageUtils.crystalDamage(mc.player, entity.getEntityPos(), predictMovement.get(), blockPos);
+        float selfDamage = DamageUtils.crystalDamage(mc.player, entity.getPos(), predictMovement.get(), blockPos);
         if (selfDamage > maxDamage.get() || (antiSuicide.get() && selfDamage >= EntityUtils.getTotalHealth(mc.player))) return 0;
 
         // Check damage to targets and face place
-        float damage = getDamageToTargets(entity.getEntityPos(), blockPos, true, false);
+        float damage = getDamageToTargets(entity.getPos(), blockPos, true, false);
         boolean shouldFacePlace = shouldFacePlace();
         double minimumDamage = shouldFacePlace ? Math.min(minDamage.get(), 1.5d) : minDamage.get();
 

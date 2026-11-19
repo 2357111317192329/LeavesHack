@@ -32,7 +32,7 @@ public class CombatUtil {
         return list;
     }
     public static boolean isValid(Entity entity, double range) {
-        boolean invalid = entity == null || !entity.isAlive() || entity.equals(mc.player) || entity instanceof PlayerEntity player && Friends.get().isFriend(player) || mc.player.getEntityPos().distanceTo(entity.getEntityPos()) > range;
+        boolean invalid = entity == null || !entity.isAlive() || entity.equals(mc.player) || entity instanceof PlayerEntity player && Friends.get().isFriend(player) || mc.player.getPos().distanceTo(entity.getPos()) > range;
 
         return !invalid;
     }
@@ -50,7 +50,7 @@ public class CombatUtil {
                 continue;
             }
 
-            if (!(mc.player.squaredDistanceTo(player.getEntityPos()) < mc.player.squaredDistanceTo(closest))) continue;
+            if (!(mc.player.squaredDistanceTo(player.getPos()) < mc.player.squaredDistanceTo(closest))) continue;
 
             closest = player;
         }
@@ -72,7 +72,7 @@ public class CombatUtil {
             Rotation.snapAt(new Vec3d(crystal.getX(), crystal.getY() + 0.25, crystal.getZ()));
 //            mc.getNetworkHandler().sendPacket(PlayerInteractEntityC2SPacket.attack(crystal, mc.player.isSneaking()));
             mc.interactionManager.attackEntity(mc.player, crystal);
-            mc.player.resetTicksSinceLastAttack();
+            mc.player.resetLastAttackedTicks();
             EntityUtil.attackSwingHand();
             if (rotate) {
                Rotation.snapBack();

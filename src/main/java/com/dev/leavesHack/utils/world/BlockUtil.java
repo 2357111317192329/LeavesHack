@@ -161,7 +161,7 @@ public class BlockUtil {
             boolean offset = true;//是否是偏移位置的水晶
             for (Direction direction : Direction.values()) {
                 //if (crystal.getBlockPos().equals(pos.offset(direction))) offset = false; 666不能这样写
-                if (crystal.getEntityPos().equals(pos.offset(direction).toCenterPos())) offset = false;
+                if (crystal.getPos().equals(pos.offset(direction).toCenterPos())) offset = false;
             }
             return offset;
         }
